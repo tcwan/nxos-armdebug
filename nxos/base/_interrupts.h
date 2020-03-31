@@ -25,15 +25,24 @@
  */
 /*@{*/
 
-/** @name Default interrupt handlers.
+/** Default IRQ handler.
  *
- * Default handlers for the three general kinds of interrupts that the
- * ARM core has to handle. These are defined in interrupts.S, and just freeze
- * the board in an infinite loop.
+ * Default handler for the IRQ interrupt defined in interrupts.S.
+ * It just freezes the board in an infinite loop.
  */
-/*@{*/
 void nx__default_irq(void);
+
+/** Default FIQ handler.
+ *
+ * Default handlers for the FIQ interrupt defined in interrupts.S.
+ * It just freezes the board in an infinite loop.
+ */
 void nx__default_fiq(void);
+
+/** Spurious interrupt handler.
+ *
+ * Deal with IRQ interrupts that are not recognized or registered with NxOS.
+ */
 void nx__spurious_irq(void);
 /*@}*/
 

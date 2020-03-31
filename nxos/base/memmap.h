@@ -81,7 +81,6 @@ extern U32 __bottom_mapped__;
  */
 #define SECSIZE(start, end) ((U32)(end - start))
 
-/** @endcond */
 
 /*
  * Wrapping of the raw symbols into something usable by the rest of
@@ -195,6 +194,8 @@ extern U32 __bottom_mapped__;
 #define NX_BOTTOM_MAP_FLASH (__bottom_mapped__ == 0 ? TRUE : FALSE)
 #define NX_BOTTOM_MAP_RAM   (!NX_BOTTOM_MAP_FLASH)
 /*@}*/
+
+/** @endcond */
 
 /*@}*/
 /*@}*/
