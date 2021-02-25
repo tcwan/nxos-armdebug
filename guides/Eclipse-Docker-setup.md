@@ -1,9 +1,9 @@
 # Getting Started with NxOS-Armdebug (with Docker Build Environment)
-NxOS-Armdebug can be built and run on various OS, due to the use of Docker to manage the build process, and a browser-based ARM simulator.
+NxOS-Armdebug can be built and run on various OS, due to the use of Docker to manage the build process.
 It has been tested on macOS Mojave (10.14.x) Big Sur (11.2.x), and will most likely work on other Linuxes.
 It will probably work on recent Windows OS as well, but it has not been tested.
 ```
-For the Windows 10 platform, it is recommended to use the Windows for Windows Subsystem for Linux (WSL)
+For the Windows 10 platform, it is recommended to use the Windows Subsystem for Linux (WSL)
 package which provides a propoer Linux (Ubuntu-based) user environment for working with NxOS-Armdebug.
 ```
 
@@ -32,7 +32,7 @@ $ docker images
 $ docker tag <image_id> arm-eabi
 ```
 
-- run Docker image as a standalone interactive shell in Linux/macOS (mapping current directory to /home)
+- run Docker image as a standalone interactive shell in Linux/macOS to verify proper installation (mapping current directory to /home)
 ```
 $ docker run -it -v$PWD:/home --rm arm-eabi bash
 [Inside Docker bash shell]
@@ -54,14 +54,27 @@ Select Docker Explorer View, and place it in a perspective pane.
 
 ![Add Docker Explorer View 2](images/Eclipse-Add-Docker-Explorer-View.png)
 
+# Obtaining NxOS-Armdebug Source Code
+
+First clone the NxOS-Armdebug project to the local hard drive.
+
+```
+$ cd <workspace dir>
+$ git clone https://github.com/tcwan/nxos-armdebug.git
+```
+
+This will create the NxOS-Armdebug folder as `nxos-armdebug` in the current directory.
+
 
 # Building NxOS-Armdebug applications
 
-This can be done from the docker image bash shell prompt, or else you can define Build Targets in Eclipse and let Eclipse manage the build.
+This can be done from the docker container bash shell prompt, or else you can define Build Targets in Eclipse and let Eclipse manage the build.
+
+Note: Internally NxOS-Armdebug uses `scons` to build the actual project code. However, since we're performing the build via Eclipse Docker integration, a top-level `Makefile` is used to dispatch the `scons` build inside the Docker container to enable smoother Eclipse-Docker integration.
 
 ## Building NxOS-Armdebug applications via command line
 
-It is possible to build NxOS-Armdebug using natively installed cross-compilation tools, but here we will use the Docker image for simplicity and consistency.
+It is possible to build NxOS-Armdebug using natively installed cross-compilation tools, but here we will use the pre-built Docker image for simplicity and consistency.
 
 It is assumed that the Docker volume mounts have been setup properly, and you're in the NxOS-Armdebug directory.
 
@@ -89,16 +102,12 @@ $ docker run -it -v$PWD:/home --rm arm-eabi bash
 /home# make clean
 ```
 
-
 ## Building NxOS-Armdebug applications via Eclipse
 
 ### Importing NxOS-Armdebug into Eclipse workspace
 
-First clone the NxOS-Armdebug project to the local hard drive.
-
-```
-$ git clone https://github.com/tcwan/nxos-armdebug.git
-```
+Make sure that NxOS-Armdebug project has been cloned to the local hard drive.
+(See [Obtaining NxOS-Armdebug Source Code](#obtaining-nxos-armdebug-source-code))
 
 Then import it into Eclipse using "File->New->Project..."
 
@@ -106,7 +115,6 @@ Then import it into Eclipse using "File->New->Project..."
 
 and select "New Makefile Project with Existing Code".
 
-Note: Internally NxOS-Armdebug uses scons to build the actual project code. However, since we're performing the build via Eclipse Docker integration, a top-level Makefile is used to dispatch the scons build inside the Docker container.
 
 ![Eclipse Makefile Project](images/Eclipse-Makefile-Project-from-Existing-Code.png)
 
