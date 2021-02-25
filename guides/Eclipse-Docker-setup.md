@@ -1,4 +1,4 @@
-# Getting Started with NxOS-Armdebug (with Docker Build Environment)
+# Getting Started with NxOS-Armdebug (with Eclipse-Docker Build Environment)
 NxOS-Armdebug can be built and run on various OS, due to the use of Docker to manage the build process.
 It has been tested on macOS Mojave (10.14.x) Big Sur (11.2.x), and will most likely work on other Linuxes.
 It will probably work on recent Windows OS as well, but it has not been tested.
@@ -15,6 +15,7 @@ package which provides a propoer Linux (Ubuntu-based) user environment for worki
 ## Set up Tools
 - install [Docker](https://www.docker.com/)
 - install [Eclipse CDT](https://www.eclipse.org/cdt/)
+- install GDB Cross-Debugger (e.g. `arm-none-eabi-gdb`) from MacPorts, or else some other source.
 
 ## Install Docker Image
 
@@ -106,8 +107,7 @@ $ docker run -it -v$PWD:/home --rm arm-eabi bash
 
 ### Importing NxOS-Armdebug into Eclipse workspace
 
-Make sure that NxOS-Armdebug project has been cloned to the local hard drive.
-(See [Obtaining NxOS-Armdebug Source Code](#obtaining-nxos-armdebug-source-code))
+Make sure that NxOS-Armdebug project has been [cloned](#obtaining-nxos-armdebug-source-code) to the local hard drive.
 
 Then import it into Eclipse using "File->New->Project..."
 
@@ -225,5 +225,41 @@ is displayed. This means that the GDB Server is now ready to accept connections 
 ## Configuring the Eclipse GDB Client
 
 The Eclipse IDE has a built-in GDB Client which provides source level cross-platform debugging capabilities.
+
+First, create a new Debug Configuration via the Run Menu "Debug Configurations..." menu item.
+
+![Eclipse Build Targets](images/Eclipse-Menu-Debug-Configurations.png)
+
+Then, in the Dialog, double-click on the "C/C++ Remote Applicaiton" item in the left panel.
+
+![Eclipse Build Targets](images/Eclipse-Debug-Configuration-Dialog.png)
+
+This will create a new Debug Configuration entry, with the corresponding configuration dialog.
+
+Make sure that the Name of the Configuration reflects the application to be debugged.
+In addition, the C/C++ Application field *MUST* point to the `<app>_rxe.elf` file for the application.
+
+![Eclipse Build Targets](images/Eclipse-DebugConfig-Main.png)
+
+Then, the GDB Remote Debugging Launcher must be changed by clicking on "Select Other..." at the bottom of the dialog.
+First, check the "Use Configuration Specific Setting" checkbox, then select the "GDB (DSF) Manual Remote Debugging Launcher" item.
+
+![Eclipse Build Targets](images/Eclipse-DebugConfig-Main-Launcher.png)
+
+After clicking on "Ok", it will return to the main configuration dialog. We will then configure the "Debugger" tab next.
+Change the initial breakpoint given by "Stop on Startup at:" to `break`.
+
+![Eclipse Build Targets](images/Eclipse-DebugConfig-Main-Debugger.png)
+
+The "Debugger" tab has three sub-tabs. In the "Main" subtab, we need to configure the "GDB Debugger" field to the full path for the cross-platform GDB client which can understand ARM executable files.
+Generally, this is named `arm-none-eabi-gdb` in MacPorts, as well as most Linux distributions.
+
+![Eclipse Build Targets](images/Eclipse-DebugConfig-Main-Debugger-Connection.png)
+
+Finally, in the "Connection" subtab, the port should be changed to 2828.
+
+After all the changes have been made, click "Apply" and "Close" the dialog to save the settings.
+
+## Debugging the NXT Application
 
 [TBD]
