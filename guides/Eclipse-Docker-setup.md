@@ -123,7 +123,8 @@ and select "New Makefile Project with Existing Code".
 To build NxOS-Armdebug applications using the Docker image, the Project setting must be updated.
 Select the Project folder in the "Project Explorer", then choose the "Project->Properties" menu item.
 
-In the Project Properties dialog, select "C/C++ Build->Settings", and click on the "Build Inside Docker Image" checkbox in the Container Settings tab (this should be visible if you've installed the Eclipse Docker Tooling plugin correctly). Don't worry if you don't see the toolchain tab
+In the Project Properties dialog, select "C/C++ Build->Settings", and click on the "Build Inside Docker Image" checkbox in the Container Settings tab (this should be visible if you've installed the Eclipse Docker Tooling plugin correctly). Don't worry if you don't see the "Toolchains" or "Devices" tab, these are used by the Eclipse Embedded/GNU MCU package, which is not needed for NxOS-Armdebug.
+
 
 Type the correct image name, either `arm-eabi` if you have tagged the docker image, or else `tcwan/arm-none-eabi-gnutools` for the full image name.
 
