@@ -2,7 +2,7 @@
 
 ## Directory Structure:
 - nxos: NxOS Project Main Directory (see nxos/README for more details)
-- nxt_python: NXT_Python code, obsoleted by NXT-Python (http://code.google.com/p/nxt-python/)
+- nxt_python: NXT_Python code, obsoleted by NXT-Python (https://github.com/castarco/nxt-python)
 - pynxt: Firmware Downloading code, unmaintained
 - remote_gdb_reference: Various GDB Stub reference source code materials
 - scripts: Miscellaneous cross-compiler toolchain utilities
