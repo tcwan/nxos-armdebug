@@ -164,7 +164,8 @@ Cross-debugging for NXT involves the following steps:
 * Establishing communications between the PC and the NXT brick via USB cable
 * Downloading applications (*.rxe) into the NXT brick using `nxtfilemgr`
 * Configuring software debugging for the GDB server on the PC with the GDB stub on the NXT using `armnxtgdbserver`
-* Debugging the NXT applicaiton using the Eclipse-based GDB Client on the PC to control execution 
+* Configuring the Eclipse GDB Client (during initial debugging session)
+* Debugging the NXT applicaiton remotely
 
 ## Downloading applications into the NXT brick
 
@@ -260,6 +261,6 @@ Finally, in the "Connection" subtab, the port should be changed to 2828.
 
 After all the changes have been made, click "Apply" and "Close" the dialog to save the settings.
 
-## Debugging the NXT Application
+## Debugging the NXT application remotely
 
 [TBD]
