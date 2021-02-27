@@ -17,6 +17,11 @@ package which provides a propoer Linux (Ubuntu-based) user environment for worki
 - install [Eclipse CDT](https://www.eclipse.org/cdt/)
 - install GDB Cross-Debugger (e.g. `arm-none-eabi-gdb`) from MacPorts, or else some other source.
 
+```
+We will be running ARM Bare-metal applications on the NXT via NxOS-Armdebug. 
+Make sure that the version of GNU compiler tools installed is configured as `arm-none-eabi-` versions.
+`arm-linux-` or `arm-elf-` versions of the GNU compiler tools will not work.
+```
 ## Install Docker Image
 
 This is best done via the terminal or shell.
@@ -158,7 +163,7 @@ For example, to create a build target for the armskel project, just type `armske
 
 # Running and Debugging NxOS-Armdebug application
 
-![Eclipse Build Targets](images/Remote-GDB-Configuration.png)
+![Cross-Debugging](images/Remote-GDB-Configuration.png)
 
 NxOS-Armdebug applications run on the NXT brick. This process is termed cross-debugging, since it involves executing a program compiled on the PC for a device using a different CPU architecture.
 Cross-debugging for NXT involves the following steps:
@@ -173,7 +178,7 @@ Cross-debugging for NXT involves the following steps:
 It is assumed that the build process for the application has completed, and the `<app>.rxe` executable file has been generated successfully.
 ```
 Note: Several binary output files are created in the application project directory:
-- <app>.rxe, which is the ARM executable for downloading to the NXT brick and executed from RAM
+- <app>.rxe, which is the ARM bare-metal executable for downloading to the NXT brick and executed from RAM
 - <app>_rxe.elf, which contains the debug symbols and object code used by the Eclipse debugger
 
 You can ignore the other *.bin and *.elf output files as they're only needed if the application is flashed directly into the NXT Firmware 
@@ -188,7 +193,7 @@ There are X-servers available for Windows platform but it has not been tested wi
 $ cd <nxos-armdebug dir>
 $ scripts/nxtfilemgr
 ```
-![Eclipse Build Targets](images/NXT-File-Manager.png)
+![NXT File Manager](images/NXT-File-Manager.png)
 
 
 From the NXT File Manager application, you can use the "Add" button to select the `*.rxe` file to be downloaded to the NXT.
@@ -228,35 +233,42 @@ is displayed. This means that the GDB Server is now ready to accept connections 
 
 The Eclipse IDE has a built-in GDB Client which provides source level cross-platform debugging capabilities.
 
-First, create a new Debug Configuration via the Run Menu "Debug Configurations..." menu item.
+First, create a new Debug Launch Configuration via the Run Menu "Debug Configurations..." menu item.
 
-![Eclipse Build Targets](images/Eclipse-Menu-Debug-Configurations.png)
+![Eclipse Debug Configuration](images/Eclipse-Menu-Debug-Configurations.png)
 
 Then, in the Dialog, double-click on the "C/C++ Remote Applicaiton" item in the left panel.
 
-![Eclipse Build Targets](images/Eclipse-Debug-Configuration-Dialog.png)
+![Eclipse Debug Dialog](images/Eclipse-Debug-Configuration-Dialog.png)
 
-This will create a new Debug Configuration entry, with the corresponding configuration dialog.
+This will create a new Debug Launch Configuration entry, with the corresponding configuration dialog.
 
-Make sure that the Name of the Configuration reflects the application to be debugged.
+Make sure that the Name of the Launch Configuration reflects the application to be debugged.
 In addition, the C/C++ Application field *MUST* point to the `<app>_rxe.elf` file for the application.
 
-![Eclipse Build Targets](images/Eclipse-DebugConfig-Main.png)
+![Eclipse Debug Main Tab](images/Eclipse-DebugConfig-Main.png)
 
 Then, the GDB Remote Debugging Launcher must be changed by clicking on "Select Other..." at the bottom of the dialog.
 First, check the "Use Configuration Specific Setting" checkbox, then select the "GDB (DSF) Manual Remote Debugging Launcher" item.
 
-![Eclipse Build Targets](images/Eclipse-DebugConfig-Main-Launcher.png)
+![Eclipse Debug Manual Launcher](images/Eclipse-DebugConfig-Main-Launcher.png)
 
 After clicking on "Ok", it will return to the main configuration dialog. We will then configure the "Debugger" tab next.
 Change the initial breakpoint given by "Stop on Startup at:" to `break`.
 
-![Eclipse Build Targets](images/Eclipse-DebugConfig-Main-Debugger.png)
+![Eclipse Debug Debugger Tab](images/Eclipse-DebugConfig-Main-Debugger.png)
 
-The "Debugger" tab has three sub-tabs. In the "Main" subtab, we need to configure the "GDB Debugger" field to the full path for the cross-platform GDB client which can understand ARM executable files.
+The "Debugger" tab has three sub-tabs. In the "Main" subtab, we need to configure the "GDB Debugger" field to the full path for the cross-platform GDB client which can understand ARM bare-metal executable files.
 Generally, this is named `arm-none-eabi-gdb` in MacPorts, as well as most Linux distributions.
 
-![Eclipse Build Targets](images/Eclipse-DebugConfig-Main-Debugger-Connection.png)
+```
+Generic GDB with multiarch support (which needs to be enabled during tool installation) can be used
+but it will need to have the target type configured correctly. 
+
+It is easier to install the `arm-non-eabi-` version instead.
+```
+
+![Eclipse Debug Connection](images/Eclipse-DebugConfig-Main-Debugger-Connection.png)
 
 Finally, in the "Connection" subtab, the port should be changed to 2828.
 
@@ -264,4 +276,31 @@ After all the changes have been made, click "Apply" and "Close" the dialog to sa
 
 ## Debugging the NXT application remotely
 
-[TBD]
+*Note: Make sure that the NXT application has been [downloaded](#downloading-applications-into-the-nxt-brick), and GDBServer is [running](#configuring-software-debugging-for-the-gdb-server-on-the-pc) before invoking the Eclipse Debug Perspective on the PC.*
+
+After the configuration of the Debug Launch Configuration, launch it, and switch over to the Eclipse Debug Perspective. 
+
+Eclipse will display the Debugging window, with the  the process panel and source listing for the main applicaiton. 
+Initially, the progrma will be shown in a running state, since the NXT Debugger will not respond until a command is issued from within the GDB Debugger screen.
+Pause the execution of the NXT application using the `Pause` (double vertical bar) button.
+
+The Debug Perspective will then show which routine the program is currently stopped in, the variables and breakpoints inspection panel, a listing of the current line in the source file, and the console information for GDB.
+
+![Debug Perspective](images/pics/eclipse-gdb-remote-debug.png)
+
+Since the template NxOS-Armdebug program has defined a breakpoint at the label `break`, it should indicate that the application exeuction has stopped at that breakpoint.
+
+The contents of variables and CPU registers can be inspected via the top middle panel.
+
+![Step-In Subroutine](images/pics/eclipse-gdb-remote-debug-stepin.png)
+
+The GDB Debugger allows single-stepping and continue. `Single-Stepping` will execute one instruction at a time on the ARM CPU.
+`Continue` will resume execution of the program without pausing until the next breakpoint is encountered. 
+
+After stopping at a breakpoint, pressing `Continue` will single-step past the current instruction and stop. This is because the Debugger stub needs to update the instruction memory with the original instruction at the previous breakpoint. The Second press of `Continue` will continue execution without stopping.
+
+```
+WARNING: Single stepping and breakpoints should not be used inside Interrupt Service Routines (Exception Routines) 
+since ARMDebug uses software instructions to implement breakpoints. Interrupts are disabled inside Interrupt Service Routines, 
+and ARMDebug would not receive the necessary interrupt from the USB bus to exchange data with the PC.
+```
