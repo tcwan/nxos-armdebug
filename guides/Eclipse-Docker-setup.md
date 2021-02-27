@@ -263,9 +263,9 @@ Generally, this is named `arm-none-eabi-gdb` in MacPorts, as well as most Linux 
 
 ```
 Generic GDB with multiarch support (which needs to be enabled during tool installation) can be used
-but it will need to have the target type configured correctly. 
+but it will need to have the executable target type configured correctly via the command prompt or .gdbinit. 
 
-It is easier to install the `arm-non-eabi-` version instead.
+It is easier to install the `arm-non-eabi-` version instead since everything is pre-configured.
 ```
 
 ![Eclipse Debug Connection](images/Eclipse-DebugConfig-Main-Debugger-Connection.png)
@@ -276,7 +276,7 @@ After all the changes have been made, click "Apply" and "Close" the dialog to sa
 
 ## Debugging the NXT application remotely
 
-*Note: Make sure that the NXT application has been [downloaded](#downloading-applications-into-the-nxt-brick), and GDBServer is [running](#configuring-software-debugging-for-the-gdb-server-on-the-pc) before invoking the Eclipse Debug Perspective on the PC.*
+*Note: Make sure that the NXT application has been [downloaded and running](#downloading-applications-into-the-nxt-brick), and GDBServer is [running](#configuring-software-debugging-for-the-gdb-server-on-the-pc) before invoking the Eclipse Debug Perspective on the PC.*
 
 After the configuration of the Debug Launch Configuration, launch it, and switch over to the Eclipse Debug Perspective. 
 
@@ -290,7 +290,10 @@ The Debug Perspective will then show which routine the program is currently stop
 
 Since the template NxOS-Armdebug program has defined a breakpoint at the label `break`, it should indicate that the application exeuction has stopped at that breakpoint.
 
-The contents of variables and CPU registers can be inspected via the top middle panel.
+The contents of variables and CPU registers can be inspected via the top middle panel. For the NXT, only the CPSR/SPSR and General Purpose Registers (`R0-R15`) are valid.
+The Floating-point registers are not found in the ARMv4T CPU used in the NXT and will show dummy content.
+
+Since GDB is primarily a C-based debugger, the variables will not show relevant information for ARM Assembly programs.
 
 ![Step-In Subroutine](images/pics/eclipse-gdb-remote-debug-stepin.png)
 
@@ -300,7 +303,9 @@ The GDB Debugger allows single-stepping and continue. `Single-Stepping` will exe
 After stopping at a breakpoint, pressing `Continue` will single-step past the current instruction and stop. This is because the Debugger stub needs to update the instruction memory with the original instruction at the previous breakpoint. The Second press of `Continue` will continue execution without stopping.
 
 ```
-WARNING: Single stepping and breakpoints should not be used inside Interrupt Service Routines (Exception Routines) 
-since ARMDebug uses software instructions to implement breakpoints. Interrupts are disabled inside Interrupt Service Routines, 
-and ARMDebug would not receive the necessary interrupt from the USB bus to exchange data with the PC.
+WARNING: Single stepping and breakpoints should not be used inside Interrupt Service Routines 
+(Exception Routines) since ARMDebug uses software instructions to implement breakpoints. 
+
+Interrupts are disabled inside Interrupt Service Routines, and ARMDebug would not receive the 
+necessary interrupt from the USB bus to exchange data with the PC.
 ```
