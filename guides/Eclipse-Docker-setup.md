@@ -14,8 +14,9 @@ package which provides a propoer Linux (Ubuntu-based) user environment for worki
 
 ## Set up Tools
 - install [Docker](https://www.docker.com/)
+- install [JDK](https://jdk.java.net/)
 - install [Eclipse CDT](https://www.eclipse.org/cdt/)
-- install GDB Cross-Debugger (e.g. `arm-none-eabi-gdb`) from MacPorts, or else some other source.
+- install GDB Cross-Debugger (e.g. `arm-none-eabi-gdb`) from [MacPorts](https://www.macports.org/) for macOS, or else some other source for your platform.
 
 ```
 We will be running ARM Bare-metal applications on the NXT via NxOS-Armdebug. 
@@ -224,10 +225,13 @@ $ scripts/armnxtgdbserver -v
 
 In the terminal window, follow the directions given until the prompt:
 ```
-Waiting for GDB connection on port XXXX...
+Waiting for GDB connection on port 2828...
 ```
 
 is displayed. This means that the GDB Server is now ready to accept connections from the GDB Client process.
+
+![ARM NXT GDB Server](images/ARMNXTGDBServer-Trace.png)
+
 
 ## Configuring the Eclipse GDB Client
 
@@ -265,12 +269,12 @@ Generally, this is named `arm-none-eabi-gdb` in MacPorts, as well as most Linux 
 Generic GDB with multiarch support (which needs to be enabled during tool installation) can be used
 but it will need to have the executable target type configured correctly via the command prompt or .gdbinit. 
 
-It is easier to install the `arm-non-eabi-` version instead since everything is pre-configured.
+It is easier to install the `arm-none-eabi-` version instead since everything is pre-configured.
 ```
 
 ![Eclipse Debug Connection](images/Eclipse-DebugConfig-Main-Debugger-Connection.png)
 
-Finally, in the "Connection" subtab, the port should be changed to 2828.
+Finally, in the "Connection" subtab, the port should be changed to `2828`.
 
 After all the changes have been made, click "Apply" and "Close" the dialog to save the settings.
 
@@ -281,24 +285,40 @@ After all the changes have been made, click "Apply" and "Close" the dialog to sa
 After the configuration of the Debug Launch Configuration, launch it, and switch over to the Eclipse Debug Perspective. 
 
 Eclipse will display the Debugging window, with the  the process panel and source listing for the main applicaiton. 
-Initially, the progrma will be shown in a running state, since the NXT Debugger will not respond until a command is issued from within the GDB Debugger screen.
+Initially, the program will be shown in a running state, since the NXT Debugger will not respond until a command is issued from within the GDB Debugger screen.
 Pause the execution of the NXT application using the `Pause` (double vertical bar) button.
+
+![Debug Perspective](images/Eclipse-GDB-Initial-Debug.png)
 
 The Debug Perspective will then show which routine the program is currently stopped in, the variables and breakpoints inspection panel, a listing of the current line in the source file, and the console information for GDB.
 
-![Debug Perspective](images/pics/eclipse-gdb-remote-debug.png)
+![Debug Pause](images/Eclipse-GDB-Remote-Debug.png)
 
 Since the template NxOS-Armdebug program has defined a breakpoint at the label `break`, it should indicate that the application exeuction has stopped at that breakpoint.
+In this case, it stopped after executing the instruction at the breakpoint.
 
-The contents of variables and CPU registers can be inspected via the top middle panel. For the NXT, only the CPSR/SPSR and General Purpose Registers (`R0-R15`) are valid.
+The contents of variables and CPU registers can be inspected via the Reister pane. For the NXT, only the CPSR/SPSR and General Purpose Registers (`R0-R15`) are valid.
 The Floating-point registers are not found in the ARMv4T CPU used in the NXT and will show dummy content.
 
+
+If the Register pane is not visible, add it via the "Window" menu, "Show View", "Registers" menu item. 
+The pane can be move to the appropriate window group for easy reference (typically in the same window as the "Variables" pane).
 Since GDB is primarily a C-based debugger, the variables will not show relevant information for ARM Assembly programs.
 
-![Step-In Subroutine](images/pics/eclipse-gdb-remote-debug-stepin.png)
+![Enabling Register Pane](images/Eclipse-Debug-Register-Enable.png)
+
+When `Single Step` is pressed, the ARM CPU will execute the next instruction, pause, and display the updated register contents with highlighting.
+
+![Step-In Subroutine](images/Eclipse-GDB-Remote-Debug-Stepin.png)
+
+## Setting Breakpoints
 
 The GDB Debugger allows single-stepping and continue. `Single-Stepping` will execute one instruction at a time on the ARM CPU.
 `Continue` will resume execution of the program without pausing until the next breakpoint is encountered. 
+
+To set a breakpoint, double-click on the line number column. This will set a `breakpoint` which is indicated by a blue dot.
+
+![Setting Breakpoints](images/Eclipse-GDB-Remote-Debug-Breakpoint.png)
 
 After stopping at a breakpoint, pressing `Continue` will single-step past the current instruction and stop. This is because the Debugger stub needs to update the instruction memory with the original instruction at the previous breakpoint. The Second press of `Continue` will continue execution without stopping.
 
@@ -309,3 +329,4 @@ WARNING: Single stepping and breakpoints should not be used inside Interrupt Ser
 Interrupts are disabled inside Interrupt Service Routines, and ARMDebug would not receive the 
 necessary interrupt from the USB bus to exchange data with the PC.
 ```
+
