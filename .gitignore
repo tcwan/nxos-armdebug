@@ -42,3 +42,6 @@ scons.options
 # Eclipse settings
 .settings/
 .cproject
+
+# Markdown scratch files
+*.md.html
