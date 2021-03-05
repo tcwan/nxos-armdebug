@@ -45,3 +45,6 @@ scons.options
 
 # Markdown scratch files
 *.md.html
+
+# GDB scratch files
+.gdb_history
