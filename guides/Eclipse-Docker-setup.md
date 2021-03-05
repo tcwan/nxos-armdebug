@@ -345,7 +345,7 @@ The Floating-point registers are not found in the ARMv4T CPU used in the NXT and
 
 If the Register pane is not visible, add it via the "Window" menu, "Show View", "Registers" menu item. 
 The pane can be move to the appropriate window group for easy reference (typically in the same window as the "Variables" pane).
-Since GDB is primarily a C-based debugger, the variables will not show relevant information for ARM Assembly programs.
+Since GDB is primarily a C-based debugger, the "Variables" pane will not show relevant information for ARM Assembly programs.
 
 ![Enabling Register Pane](images/Eclipse-Debug-Register-Enable.png)
 
