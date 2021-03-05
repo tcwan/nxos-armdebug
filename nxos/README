@@ -32,7 +32,7 @@ A basic setup would include:
   * ARM Cross-Compiler Toolchain (GNU GCC)
   * Host-based GDB Server (Python-based) and Client (GDB for ARM)
   * Enhanced NXT Firmware by John Hansen from bricxcc.sourceforge.net
-  * Firmware Downloading Tool (NeXT Tool [GUI] or NeXTTool [CLI] from brixcc.sourceforge.net)
+  * Firmware Downloading Tool (NeXT Tool [GUI] or NeXTTool [CLI] from bricxcc.sourceforge.net)
 
 Building and testing NxOS requires a few software packages and
 libraries. Since most of the external utilities are written in Python,
@@ -63,7 +63,7 @@ On Linux platforms, the following packages are needed:
 
 2.1 Firmware Utilities
 ^^^^^^^^^^^^^^^^^^^^^^
-NeXT Tool (available from the brixcc website) by John Hansen is
+NeXT Tool (available from the bricxcc website) by John Hansen is
 available for Windows, Mac OSX and Linux for uploading firmware and
 files to the NXT. It has a GUI interface and is probably the most stable
 tool for this purpose currently. A Command line version (NeXTTool) is
