@@ -31,7 +31,7 @@ A basic setup would include:
   * Integrated Development Environment (Eclipse)
   * ARM Cross-Compiler Toolchain (GNU GCC)
   * Host-based GDB Server (Python-based) and Client (GDB for ARM)
-  * Enhanced NXT Firmware by John Hansen from brixcc.sourceforge.net
+  * Enhanced NXT Firmware by John Hansen from bricxcc.sourceforge.net
   * Firmware Downloading Tool (NeXT Tool [GUI] or NeXTTool [CLI] from brixcc.sourceforge.net)
 
 Building and testing NxOS requires a few software packages and
