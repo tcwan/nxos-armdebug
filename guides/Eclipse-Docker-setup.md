@@ -10,7 +10,8 @@ For the Windows 10 Host OS platform, it is recommended to use the Windows Subsys
 package which provides a propoer Linux (Ubuntu-based) user environment for working with NxOS-Armdebug.
 
 WARNING: Due to the difference in End-of-Line representation in Windows vs macOS/Linux, editing 
-text files in Windows may result in strange compilation errors. Text files must be saved in Unix (newline) format.
+text files in Windows may result in strange compilation errors. 
+Source files MUST be saved in Unix (newline) textfile format.
 ```
 
 # NXT Brick Setup
@@ -51,6 +52,8 @@ This is known as cross-development since the Host CPU has a different architectu
 - install [Eclipse CDT](https://www.eclipse.org/cdt/)
 - install GDB Cross-Debugger (e.g. `arm-none-eabi-gdb`) from [MacPorts](https://www.macports.org/) for macOS, or else some other source for your platform.
 - install software drivers and libraries\*: libusb (1.0.21+), python 2.7.x, pyusb, nxt-python (2.2.2+)
+
+NxOS-Armdebug uses the USB interface (libusb) to communicate with the NXT. Bluetooth communications does not work (the drivers are also obsolete), while PyFantom is no longer supported since it is 32-bit only.
 
 \* The software drivers and libraries have been tested with Python 2.7.x. They have not been tested with Python 3, and are not expected to work correctly with Python 3.
 The drivers and libraries (libusb, pyusb) are usually available pre-packaged for Linux or MacPorts (for macOS).
