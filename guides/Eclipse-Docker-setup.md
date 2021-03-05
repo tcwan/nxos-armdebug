@@ -1,22 +1,61 @@
 # Getting Started with NxOS-Armdebug (with Eclipse-Docker Build Environment)
-NxOS-Armdebug can be built and run on various OS, due to the use of Docker to manage the build process.
-It has been tested on macOS Mojave (10.14.x) Big Sur (11.2.x), and will most likely work on other Linuxes.
+
+NxOS-Armdebug is a bare-metal ARM-based embedded application platform for NXT.
+The ARM executables can be built on various Host OS, due to the use of Docker to manage the cross-compilation build process.
+
+The build environment has been tested on macOS Mojave (10.14.x) Big Sur (11.2.x), and will most likely work on other Linuxes.
 It will probably work on recent Windows OS as well, but it has not been tested.
 ```
-For the Windows 10 platform, it is recommended to use the Windows Subsystem for Linux (WSL)
+For the Windows 10 Host OS platform, it is recommended to use the Windows Subsystem for Linux (WSL)
 package which provides a propoer Linux (Ubuntu-based) user environment for working with NxOS-Armdebug.
+
+WARNING: Due to the difference in End-of-Line representation in Windows vs macOS/Linux, editing 
+text files in Windows may result in strange compilation errors. Text files must be saved in Unix (newline) format.
 ```
 
-## System Requirements
+# NXT Brick Setup
+Due to the fact that we're running ARM binaries directly from the NXT RAM, we cannot use the standard LEGO supplied firmware for NxOS-Armdebug.
+
+NxOS-Armdebug depends on John Hansen's [Enhanced Firmware](http://bricxcc.sourceforge.net/firmware.html) (tested with ver [1.31](http://bricxcc.sourceforge.net/test_releases/lms_arm_nbcnxc_131_20111019_1659.rfw)) to execute the binary applications.
+The Enhanced Firmware is fully backward compatible with the LEGO Mindstorms Platform and can be used in place of exsting firmware for LEGO Mindstorms NXT-G Software.
+
+To download the Enhanced Firware to the the NXT brick, a NXT flashing tool is needed. 
+
+The Mac OS X GUI based [Next Tool](http://bricxcc.sourceforge.net/utilities.html) is the easiest to use. 
+Unfortunately, the tools are no longer being maintained, so flashing the firmware to the NXT brick using recent macOS (post-10.11 El Capitan) is not well supported.
+If you have access to a Mac running older versions of Mac OS X with 32-bit support, then is the best option.
+Otherwise, you will need to look for an old Windows PC running Windows 7 and use [BricX CC](http://bricxcc.sourceforge.net/) to flash the NXT Enahnced Firmware (this has not been tested on Windows 10 and might not work on that platform).
+
+You can check the version of the NXT Firmware using the Tool Icon from the NXT Graphical Menu.
+
+![NXT Firmware](images/NXT-Enhanced-Firmware.png)
+
+```
+This step only needs to be done once, so unless you brick the NXT and need to reflash the firmware, 
+you shouldn't need to do repeat the process.
+```
+
+# Development Platform Setup
+
+The Development Platform runs on the Host OS on a PC, to perform cross-compilation from source to generate ARM-based object code and binary applications.
+This is known as cross-development since the Host CPU has a different architecture and operating environment from the NXT CPU.
+
+## Host System Requirements
 - min dual-core x86 compatible CPU
 - min 8 GB RAM (needed to run Docker instance and Eclipse)
-- min 8 GB free HD space
+- min 16 GB free HD space
 
-## Set up Tools
+## Setting up Development Tools
 - install [Docker](https://www.docker.com/)
 - install [JDK](https://jdk.java.net/)
 - install [Eclipse CDT](https://www.eclipse.org/cdt/)
 - install GDB Cross-Debugger (e.g. `arm-none-eabi-gdb`) from [MacPorts](https://www.macports.org/) for macOS, or else some other source for your platform.
+- install software drivers and libraries\*: libusb (1.0.21+), python 2.7.x, pyusb, nxt-python (2.2.2+)
+
+\* The software drivers and libraries have been tested with Python 2.7.x. They have not been tested with Python 3, and are not expected to work correctly with Python 3.
+The drivers and libraries (libusb, pyusb) are usually available pre-packaged for Linux or MacPorts (for macOS).
+The nxt-python 2.2.2+ library is available [here](https://github.com/castarco/nxt-python). 
+MacPorts users can use the local [Portfile](https://github.com/tcwan/nxos-armdebug/tree/docker/macports/ports/python/py27-nxt-python) to build the library [directly](https://guide.macports.org/#development.local-repositories) from within MacPorts.
 
 ```
 We will be running ARM Bare-metal applications on the NXT via NxOS-Armdebug. 
